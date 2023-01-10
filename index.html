@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+  <link rel="stylesheet" href="./assets/css/style.css" />
+  <title>Karaoke Knights</title>
+</head>
+
+<body>
+  <header>
+    <div class="box">
+      <h1>Karaoke Knights</h1>
+      <h2>The ultimate tool to create the best Karaoke Night to date</h2>
+    </div>
+  </header>
+  <main>
+    <div class="tile is-ancestor">
+      <div id="left" class="tile is-vertical is-3 is-parent">
+        <h2>Search:</h2>
+
+        <div class="field is-child">
+          <label class="label">Artist</label>
+          <div class="control">
+            <input type="text" class="input" id="artistSearch">
+          </div>
+        </div>
+
+        <div class="field is-child">
+          <label class="label">Song Title</label>
+          <div class="control">
+            <input type="text" class="input" id="songSearch">
+          </div>
+        </div>
+
+        <div class="field is-child">
+          <label class="label">Genre</label>
+          <div class="control">
+            <input type="text" class="input" id="genreSearch">
+          </div>
+        </div>
+
+        <div id="recent" class="tile is-child">Recent</div>
+        <div id="queue" class="tile is-child">Up Next</div>
+      </div>
+      <div id="songList" class="tile is-9 is-parent">
+        <h2>Select a song to see its lyrics!</h2>
+      </div>
+
+    </div>
+  </main>
+  <footer>
+  </footer>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.3/dayjs.min.js"
+    integrity="sha256-iu/zLUB+QgISXBLCW/mcDi/rnf4m4uEDO0wauy76x7U=" crossorigin="anonymous"></script>
+  <script src="./assets/js/script.js"></script>
+</body>
+
+</html>
