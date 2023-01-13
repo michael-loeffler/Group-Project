@@ -1,25 +1,100 @@
-// var apiKey = "505e83WfFdaB9foGaPW7eLXwNQ1ZV1JIFPwKCXuAaGoDi0vOgXtMdIQ6";
+var songList = $('#songList')
+// var songDivEl = $('#songDivEl');
+// var songHeaderEl = $('#songHeaderEl');
+// var songInfoEl = $('#songInfoEl');
+// var iconEl = $('#iconEl');
 
-var song = "Thriller";
-fetchSong(song);
+var apiKeyLyrics = "apikey=505e83WfFdaB9foGaPW7eLXwNQ1ZV1JIFPwKCXuAaGoDi0vOgXtMdIQ6";
 
-function fetchSong(song) {
-    var songAPI = "https://api.happi.dev/v1/music?q=" + song + "&limit=&apikey=505e83WfFdaB9foGaPW7eLXwNQ1ZV1JIFPwKCXuAaGoDi0vOgXtMdIQ6&type=:type&lyrics=1"
+var userSearch = "Quinn XCII";
+userSearch = encodeURI(userSearch);
+fetchSongs(userSearch);
+
+function fetchSongs(userSearch) {
+    var songAPI = "https://api.happi.dev/v1/music?q=" + userSearch + "&limit=10&type=:type&lyrics=1&" + apiKeyLyrics
     
     fetch(songAPI)
         .then(function (response) {
             if (response.ok) {
                 response.json().then(function (data) {
                     console.log(data);
-                    fetchLyrics(data);
+                    displaySongs(data);
                 });
             }
         })
 };
 
+function displaySongs(data) {
+    songList.empty();
+    var songListHeader = $('<h2>');
+    songListHeader.text("Select a song to see its lyrics!");
+    songList.append(songListHeader);
+    var lyricsArray = [];
+
+    for (i = 0; i < data.result.length; i++) {
+        var song = data.result[i].track;
+        var artist = data.result[i].artist;
+        var album = data.result[i].album;
+        var icon = data.result[i].cover;
+        var albumIconURL = icon + "?" + apiKeyLyrics;
+        var hasLyrics = data.result[i].haslyrics
+
+        if (hasLyrics) {
+            var songDivEl = $('<article>');
+            songDivEl.attr("class", "media level-left ");
+            var figureEl = $('<figure>');
+            figureEl.attr("class", "media-left");
+            var pEl = $('<p>');
+            pEl.attr("class", "image is-64x64");
+            var albumIcon = $('<img>');
+            pEl.append(albumIcon);
+            figureEl.append(pEl);
+
+            var mediaContainerEl = $('<div>');
+            mediaContainerEl.attr("class", "media-content");
+            var mediaContentEl = $('<div>');
+            mediaContentEl.attr("class", "content");
+            var songP = $('<p>');
+            var songHeaderEl = $('<strong>');
+            var br = $('<br>');
+            var songInfoEl = $('<small>')
+            songP.append(songHeaderEl);
+            songP.append(br);
+            songP.append(songInfoEl);
+            mediaContentEl.append(songP);
+            mediaContainerEl.append(mediaContentEl)
+
+            var iconContainerEl = $('<div>');
+            iconContainerEl.attr("class", "level-right");
+            var iconA = $('<a>');
+            var iconSpan = $('<span>');
+            iconSpan.attr("class", "icon is-large");
+            var iconI = $('<i>');
+            iconI.attr("class", "fa-solid fa-heart-circle-plus");
+            iconSpan.append(iconI);
+            iconA.append(iconI);
+            iconContainerEl.append(iconA);
+
+            songDivEl.append(figureEl);
+            songDivEl.append(mediaContainerEl);
+            songDivEl.append(iconContainerEl);
+            songList.append(songDivEl);
+            
+            albumIcon.attr("src", albumIconURL);
+            songHeaderEl.text(song);
+            songInfoEl.text(artist + ", " + album);
+            
+            var lyricsAPI = data.result[i].api_lyrics + "?" + apiKeyLyrics;
+            lyricsArray.push(lyricsAPI);
+        }
+   
+    }
+    console.log(lyricsArray);
+    
+}
 
 function fetchLyrics(data) {
-    var lyricsAPI = data.result[3].api_lyrics + "?apikey=505e83WfFdaB9foGaPW7eLXwNQ1ZV1JIFPwKCXuAaGoDi0vOgXtMdIQ6";
+    var lyricsAPI = data.result[5].api_lyrics + apiKeyLyrics;
     console.log(lyricsAPI);
     
     fetch(lyricsAPI)
@@ -35,5 +110,10 @@ function fetchLyrics(data) {
 
 function displayLyrics(data) {
     var lyrics = data.result.lyrics;
-    console.log(lyrics)
+    var artist = data.result.artist;
+    var album = data.result.album;
+    console.log(artist);
+    console.log(album);
+    console.log(lyrics);
 };
+
