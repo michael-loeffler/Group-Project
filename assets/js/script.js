@@ -5,6 +5,7 @@ var songList = $('#songList')
 // var iconEl = $('#iconEl');
 
 var apiKeyLyrics = "apikey=505e83WfFdaB9foGaPW7eLXwNQ1ZV1JIFPwKCXuAaGoDi0vOgXtMdIQ6";
+var lyricsArray = [];
 
 var userSearch = "Quinn XCII";
 userSearch = encodeURI(userSearch);
@@ -29,7 +30,7 @@ function displaySongs(data) {
     var songListHeader = $('<h2>');
     songListHeader.text("Select a song to see its lyrics!");
     songList.append(songListHeader);
-    var lyricsArray = [];
+    lyricsArray = [];
 
     for (i = 0; i < data.result.length; i++) {
         var song = data.result[i].track;
@@ -41,7 +42,8 @@ function displaySongs(data) {
 
         if (hasLyrics) {
             var songDivEl = $('<article>');
-            songDivEl.attr("class", "media level-left ");
+            songDivEl.attr("class", "media level-left");
+            songDivEl.attr("id", i);
             var figureEl = $('<figure>');
             figureEl.attr("class", "media-left");
             var pEl = $('<p>');
@@ -89,15 +91,24 @@ function displaySongs(data) {
         }
    
     }
-    console.log(lyricsArray);
+    console.log(lyricsArray[0]);
     
 }
 
-function fetchLyrics(data) {
-    var lyricsAPI = data.result[5].api_lyrics + apiKeyLyrics;
-    console.log(lyricsAPI);
+// var songDivEl = $('article');
+// console.log(songDivEl);
+// songList.on("click", fetchLyrics);
+
+fetchLyrics(lyricsArray);
+
+function fetchLyrics(lyricsArray) {
+    // var songIndex = this.getAttribute('id'); 
+    // console.log(songIndex);
     
-    fetch(lyricsAPI)
+    // var lyricsAPI = lyricsArray[0];
+    // console.log(lyricsAPI);
+    
+    fetch('https://api.happi.dev/v1/music/artists/19524/albums/50048/tracks/824023/lyrics?apikey=505e83WfFdaB9foGaPW7eLXwNQ1ZV1JIFPwKCXuAaGoDi0vOgXtMdIQ6')
         .then(function (response) {
             if (response.ok) {
                 response.json().then(function (data) {
@@ -109,11 +120,30 @@ function fetchLyrics(data) {
 };
 
 function displayLyrics(data) {
-    var lyrics = data.result.lyrics;
+    songList.empty();
+
+    var songP = $('<p>');
+    var songHeaderEl = $('<strong>');
+    var br = $('<br>');
+    var songInfoEl = $('<small>')
+    songP.append(songHeaderEl);
+    songP.append(br);
+    songP.append(songInfoEl);
+    songList.append(songP)
+
+    var lyricsP = $('<p>');
+    lyricsP.css("white-space", "pre-line");
+    songList.append(lyricsP);
+
+    var song = data.result.track;
     var artist = data.result.artist;
     var album = data.result.album;
-    console.log(artist);
-    console.log(album);
-    console.log(lyrics);
+    var lyrics = data.result.lyrics;
+    lyrics = lyrics.replace("\nSource", "\n\nSource");
+
+    songHeaderEl.text(song);
+    songInfoEl.text(artist + ", " + album);
+    lyricsP.text(lyrics);
+    return;
 };
 
