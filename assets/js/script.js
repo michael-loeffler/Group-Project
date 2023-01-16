@@ -108,14 +108,9 @@ songList.on("click", () => { fetchLyrics(lyricsArray) });
 
 function fetchLyrics(lyricsArray) {
     var songIndex = event.target.getAttribute('id'); 
-    console.log(songIndex);
     songIndex = Number(songIndex);
-    console.log(songIndex);
-    console.log(lyricsArray);
-
     var lyricsAPI = lyricsArray[songIndex];
-    console.log(lyricsAPI);
-
+    
     fetch(lyricsAPI)
         .then(function (response) {
             if (response.ok) {
@@ -153,5 +148,3 @@ function displayLyrics(data) {
     songInfoEl.text(artist + ", " + album);
     lyricsP.text(lyrics);
 };
-
-// https://api.happi.dev/v1/music/artists/19524/albums/50048/tracks/824023/lyrics?apikey=505e83WfFdaB9foGaPW7eLXwNQ1ZV1JIFPwKCXuAaGoDi0vOgXtMdIQ6
