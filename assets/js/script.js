@@ -12,7 +12,7 @@ userSearch = encodeURI(userSearch);
 fetchSongs(userSearch);
 
 function fetchSongs(userSearch) {
-    var songAPI = "https://api.happi.dev/v1/music?q=" + userSearch + "&limit=10&type=:type&lyrics=1&" + apiKeyLyrics
+    var songAPI = "https://api.happi.dev/v1/music?q=" + userSearch + "&limit=20&type=:type&lyrics=1&" + apiKeyLyrics
     
     fetch(songAPI)
         .then(function (response) {
@@ -31,16 +31,21 @@ function displaySongs(data) {
     songListHeader.text("Select a song to see its lyrics!");
     songList.append(songListHeader);
     lyricsArray = [];
+    var songArray = [];
 
-    for (i = 0; i < data.result.length; i++) {
+    for (i = 0; ((i < data.result.length) && (songArray.length < 10)); i++) {
         var song = data.result[i].track;
         var artist = data.result[i].artist;
         var album = data.result[i].album;
         var icon = data.result[i].cover;
         var albumIconURL = icon + "?" + apiKeyLyrics;
-        var hasLyrics = data.result[i].haslyrics
+        var hasLyrics = data.result[i].haslyrics;
+        console.log(songArray);
+        console.log(song);
 
-        if (hasLyrics) {
+        if (hasLyrics && (!songArray.includes(song))) {
+            songArray.push(song);
+            console.log("hi");
             var songDivEl = $('<article>');
             songDivEl.attr("class", "media level-left");
             songDivEl.attr("id", i);
@@ -99,16 +104,16 @@ function displaySongs(data) {
 // console.log(songDivEl);
 // songList.on("click", fetchLyrics);
 
-fetchLyrics(lyricsArray);
+// fetchLyrics(lyricsArray);
 
 function fetchLyrics(lyricsArray) {
     // var songIndex = this.getAttribute('id'); 
     // console.log(songIndex);
     
-    // var lyricsAPI = lyricsArray[0];
-    // console.log(lyricsAPI);
+    var lyricsAPI = lyricsArray[0];
+    console.log(lyricsAPI);
     
-    fetch('https://api.happi.dev/v1/music/artists/19524/albums/50048/tracks/824023/lyrics?apikey=505e83WfFdaB9foGaPW7eLXwNQ1ZV1JIFPwKCXuAaGoDi0vOgXtMdIQ6')
+    fetch(lyricsAPI)
         .then(function (response) {
             if (response.ok) {
                 response.json().then(function (data) {
@@ -147,3 +152,4 @@ function displayLyrics(data) {
     return;
 };
 
+// https://api.happi.dev/v1/music/artists/19524/albums/50048/tracks/824023/lyrics?apikey=505e83WfFdaB9foGaPW7eLXwNQ1ZV1JIFPwKCXuAaGoDi0vOgXtMdIQ6
