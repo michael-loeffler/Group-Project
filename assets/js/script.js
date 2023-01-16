@@ -1,19 +1,22 @@
+var userInputEl = $('#artistSearch');
 var songList = $('#songList')
-// var songDivEl = $('#songDivEl');
-// var songHeaderEl = $('#songHeaderEl');
-// var songInfoEl = $('#songInfoEl');
-// var iconEl = $('#iconEl');
 
 var apiKeyLyrics = "apikey=505e83WfFdaB9foGaPW7eLXwNQ1ZV1JIFPwKCXuAaGoDi0vOgXtMdIQ6";
+var userSearch = "";
 var lyricsArray = [];
 
-var userSearch = "Quinn XCII";
-userSearch = encodeURI(userSearch);
-fetchSongs(userSearch);
+userInputEl.on('change', getUserInput);
+
+function getUserInput () {
+    userSearch = userInputEl.val().trim();
+    userSearch = encodeURI(userSearch);
+    userInputEl.val("");
+    fetchSongs(userSearch);
+};
 
 function fetchSongs(userSearch) {
-    var songAPI = "https://api.happi.dev/v1/music?q=" + userSearch + "&limit=10&type=:type&lyrics=1&" + apiKeyLyrics
-    
+    var songAPI = "https://api.happi.dev/v1/music?q=" + userSearch + "&limit=20&type=:type&lyrics=1&" + apiKeyLyrics
+
     fetch(songAPI)
         .then(function (response) {
             if (response.ok) {
@@ -31,19 +34,23 @@ function displaySongs(data) {
     songListHeader.text("Select a song to see its lyrics!");
     songList.append(songListHeader);
     lyricsArray = [];
+    var songArray = [];
+    var lyricsCount = "";
 
-    for (i = 0; i < data.result.length; i++) {
+    for (i = 0; ((i < data.result.length) && (songArray.length < 10)); i++) {
         var song = data.result[i].track;
         var artist = data.result[i].artist;
         var album = data.result[i].album;
         var icon = data.result[i].cover;
         var albumIconURL = icon + "?" + apiKeyLyrics;
-        var hasLyrics = data.result[i].haslyrics
+        var hasLyrics = data.result[i].haslyrics;
 
-        if (hasLyrics) {
+        if (hasLyrics && (!songArray.includes(song))) {
+            songArray.push(song);
             var songDivEl = $('<article>');
             songDivEl.attr("class", "media level-left");
-            songDivEl.attr("id", i);
+            songDivEl.attr("id", lyricsCount);
+            lyricsCount++;
             var figureEl = $('<figure>');
             figureEl.attr("class", "media-left");
             var pEl = $('<p>');
@@ -81,34 +88,30 @@ function displaySongs(data) {
             songDivEl.append(mediaContainerEl);
             songDivEl.append(iconContainerEl);
             songList.append(songDivEl);
-            
+
             albumIcon.attr("src", albumIconURL);
             songHeaderEl.text(song);
             songInfoEl.text(artist + ", " + album);
-            
+
             var lyricsAPI = data.result[i].api_lyrics + "?" + apiKeyLyrics;
             lyricsArray.push(lyricsAPI);
+
         }
-   
+
     }
-    console.log(lyricsArray[0]);
-    
+
 }
 
-// var songDivEl = $('article');
-// console.log(songDivEl);
-// songList.on("click", fetchLyrics);
 
-fetchLyrics(lyricsArray);
+songList.on("click", () => { fetchLyrics(lyricsArray) });
+
 
 function fetchLyrics(lyricsArray) {
-    // var songIndex = this.getAttribute('id'); 
-    // console.log(songIndex);
+    var songIndex = event.target.getAttribute('id'); 
+    songIndex = Number(songIndex);
+    var lyricsAPI = lyricsArray[songIndex];
     
-    // var lyricsAPI = lyricsArray[0];
-    // console.log(lyricsAPI);
-    
-    fetch('https://api.happi.dev/v1/music/artists/19524/albums/50048/tracks/824023/lyrics?apikey=505e83WfFdaB9foGaPW7eLXwNQ1ZV1JIFPwKCXuAaGoDi0vOgXtMdIQ6')
+    fetch(lyricsAPI)
         .then(function (response) {
             if (response.ok) {
                 response.json().then(function (data) {
@@ -144,6 +147,4 @@ function displayLyrics(data) {
     songHeaderEl.text(song);
     songInfoEl.text(artist + ", " + album);
     lyricsP.text(lyrics);
-    return;
 };
-
