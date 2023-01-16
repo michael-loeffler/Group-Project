@@ -13,7 +13,7 @@ fetchSongs(userSearch);
 
 function fetchSongs(userSearch) {
     var songAPI = "https://api.happi.dev/v1/music?q=" + userSearch + "&limit=20&type=:type&lyrics=1&" + apiKeyLyrics
-    
+
     fetch(songAPI)
         .then(function (response) {
             if (response.ok) {
@@ -32,6 +32,7 @@ function displaySongs(data) {
     songList.append(songListHeader);
     lyricsArray = [];
     var songArray = [];
+    var lyricsCount = "";
 
     for (i = 0; ((i < data.result.length) && (songArray.length < 10)); i++) {
         var song = data.result[i].track;
@@ -40,15 +41,13 @@ function displaySongs(data) {
         var icon = data.result[i].cover;
         var albumIconURL = icon + "?" + apiKeyLyrics;
         var hasLyrics = data.result[i].haslyrics;
-        console.log(songArray);
-        console.log(song);
 
         if (hasLyrics && (!songArray.includes(song))) {
             songArray.push(song);
-            console.log("hi");
             var songDivEl = $('<article>');
             songDivEl.attr("class", "media level-left");
-            songDivEl.attr("id", i);
+            songDivEl.attr("id", lyricsCount);
+            lyricsCount++;
             var figureEl = $('<figure>');
             figureEl.attr("class", "media-left");
             var pEl = $('<p>');
@@ -86,33 +85,34 @@ function displaySongs(data) {
             songDivEl.append(mediaContainerEl);
             songDivEl.append(iconContainerEl);
             songList.append(songDivEl);
-            
+
             albumIcon.attr("src", albumIconURL);
             songHeaderEl.text(song);
             songInfoEl.text(artist + ", " + album);
-            
+
             var lyricsAPI = data.result[i].api_lyrics + "?" + apiKeyLyrics;
             lyricsArray.push(lyricsAPI);
+
         }
-   
+
     }
-    console.log(lyricsArray[0]);
-    
+
 }
 
-// var songDivEl = $('article');
-// console.log(songDivEl);
-// songList.on("click", fetchLyrics);
 
-// fetchLyrics(lyricsArray);
+songList.on("click", () => { fetchLyrics(lyricsArray) });
+
 
 function fetchLyrics(lyricsArray) {
-    // var songIndex = this.getAttribute('id'); 
-    // console.log(songIndex);
-    
-    var lyricsAPI = lyricsArray[0];
+    var songIndex = event.target.getAttribute('id'); 
+    console.log(songIndex);
+    songIndex = Number(songIndex);
+    console.log(songIndex);
+    console.log(lyricsArray);
+
+    var lyricsAPI = lyricsArray[songIndex];
     console.log(lyricsAPI);
-    
+
     fetch(lyricsAPI)
         .then(function (response) {
             if (response.ok) {
