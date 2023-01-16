@@ -1,15 +1,18 @@
+var userInputEl = $('#artistSearch');
 var songList = $('#songList')
-// var songDivEl = $('#songDivEl');
-// var songHeaderEl = $('#songHeaderEl');
-// var songInfoEl = $('#songInfoEl');
-// var iconEl = $('#iconEl');
 
 var apiKeyLyrics = "apikey=505e83WfFdaB9foGaPW7eLXwNQ1ZV1JIFPwKCXuAaGoDi0vOgXtMdIQ6";
+var userSearch = "";
 var lyricsArray = [];
 
-var userSearch = "Quinn XCII";
-userSearch = encodeURI(userSearch);
-fetchSongs(userSearch);
+userInputEl.on('change', getUserInput);
+
+function getUserInput () {
+    userSearch = userInputEl.val().trim();
+    userSearch = encodeURI(userSearch);
+    userInputEl.val("");
+    fetchSongs(userSearch);
+};
 
 function fetchSongs(userSearch) {
     var songAPI = "https://api.happi.dev/v1/music?q=" + userSearch + "&limit=20&type=:type&lyrics=1&" + apiKeyLyrics
@@ -149,7 +152,6 @@ function displayLyrics(data) {
     songHeaderEl.text(song);
     songInfoEl.text(artist + ", " + album);
     lyricsP.text(lyrics);
-    return;
 };
 
 // https://api.happi.dev/v1/music/artists/19524/albums/50048/tracks/824023/lyrics?apikey=505e83WfFdaB9foGaPW7eLXwNQ1ZV1JIFPwKCXuAaGoDi0vOgXtMdIQ6
