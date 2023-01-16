@@ -1,0 +1,13 @@
+body {
+    background-color: rgb(152, 152, 171);
+}
+.box{
+    background: linear-gradient(to right, rgb(15, 59, 183), rgb(176, 187, 215));
+    color: black;
+}
+.label{
+    font-weight: bolder;
+}
+.w-110{
+    width:110px;
+}
