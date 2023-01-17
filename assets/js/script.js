@@ -7,7 +7,7 @@ var lyricsArray = [];
 
 userInputEl.on('change', getUserInput);
 
-function getUserInput () {
+function getUserInput() {
     userSearch = userInputEl.val().trim();
     userSearch = encodeURI(userSearch);
     userInputEl.val("");
@@ -21,7 +21,6 @@ function fetchSongs(userSearch) {
         .then(function (response) {
             if (response.ok) {
                 response.json().then(function (data) {
-                    console.log(data);
                     displaySongs(data);
                 });
             }
@@ -103,28 +102,31 @@ function displaySongs(data) {
 }
 
 
-songList.on("click", () => { fetchLyrics(lyricsArray) });
+songList.on("click", 'article', () => { fetchLyrics(lyricsArray) });
 
 
 function fetchLyrics(lyricsArray) {
-    var songIndex = event.target.getAttribute('id'); 
-    songIndex = Number(songIndex);
-    var lyricsAPI = lyricsArray[songIndex];
-    
-    fetch(lyricsAPI)
-        .then(function (response) {
-            if (response.ok) {
-                response.json().then(function (data) {
-                    console.log(data);
-                    displayLyrics(data);
-                });
-            }
-        })
+    var songIndex = event.target.getAttribute('id');
+    if (songIndex != null) {
+        songIndex = Number(songIndex);
+        var lyricsAPI = lyricsArray[songIndex];
+
+        fetch(lyricsAPI)
+            .then(function (response) {
+                if (response.ok) {
+                    response.json().then(function (data) {
+                        displayLyrics(data);
+                    });
+                }
+            })
+    }
 };
 
 function displayLyrics(data) {
     songList.empty();
 
+    var backBtn = $('<button id="return">');
+    backBtn.text('Return to search')
     var songP = $('<p>');
     var songHeaderEl = $('<strong>');
     var br = $('<br>');
@@ -132,7 +134,8 @@ function displayLyrics(data) {
     songP.append(songHeaderEl);
     songP.append(br);
     songP.append(songInfoEl);
-    songList.append(songP)
+    songList.append(backBtn);
+    songList.append(songP);
 
     var lyricsP = $('<p>');
     lyricsP.css("white-space", "pre-line");
@@ -148,3 +151,5 @@ function displayLyrics(data) {
     songInfoEl.text(artist + ", " + album);
     lyricsP.text(lyrics);
 };
+
+songList.on('click', '#return', () => { fetchSongs(userSearch) })
