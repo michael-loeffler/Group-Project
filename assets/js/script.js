@@ -15,9 +15,6 @@ var recentCount = 0;
 
 var lyricsAPI = "";
 
-
-console.log(recentObject);
-
 userInputEl.on('change', getUserInput);
 
 function getUserInput() {
@@ -28,7 +25,6 @@ function getUserInput() {
 };
 
 function fetchSongs(userSearch) {
-    console.log(userSearch)
     var songAPI = "https://api.happi.dev/v1/music?q=" + userSearch + "&limit=20&type=:type&lyrics=1&" + apiKeyLyrics
 
     fetch(songAPI)
