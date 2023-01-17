@@ -1,9 +1,22 @@
 var userInputEl = $('#musicInput');
 var songList = $('#songList')
+var recentListEl = $('#recent');
 
 var apiKeyLyrics = "apikey=505e83WfFdaB9foGaPW7eLXwNQ1ZV1JIFPwKCXuAaGoDi0vOgXtMdIQ6";
 var userSearch = "";
 var lyricsArray = [];
+var recentObject = JSON.parse(localStorage.getItem("recentObject"));
+if (recentObject === null) {
+    recentList = [];
+    recentURL = [];
+    recentObject = { recentList, recentURL };
+}
+var recentCount = 0;
+
+var lyricsAPI = "";
+
+
+console.log(recentObject);
 
 userInputEl.on('change', getUserInput);
 
@@ -15,6 +28,7 @@ function getUserInput() {
 };
 
 function fetchSongs(userSearch) {
+    console.log(userSearch)
     var songAPI = "https://api.happi.dev/v1/music?q=" + userSearch + "&limit=20&type=:type&lyrics=1&" + apiKeyLyrics
 
     fetch(songAPI)
@@ -99,7 +113,7 @@ function displaySongs(data) {
 
     }
 
-}
+};
 
 
 songList.on("click", 'article', () => { fetchLyrics(lyricsArray) });
@@ -109,7 +123,7 @@ function fetchLyrics(lyricsArray) {
     var songIndex = event.target.getAttribute('id');
     if (songIndex != null) {
         songIndex = Number(songIndex);
-        var lyricsAPI = lyricsArray[songIndex];
+        lyricsAPI = lyricsArray[songIndex];
 
         fetch(lyricsAPI)
             .then(function (response) {
@@ -125,8 +139,11 @@ function fetchLyrics(lyricsArray) {
 function displayLyrics(data) {
     songList.empty();
 
+    if (userSearch != "") {
     var backBtn = $('<button id="return">');
     backBtn.text('Return to search')
+    songList.append(backBtn);
+    }
     var songP = $('<p>');
     var songHeaderEl = $('<strong>');
     var br = $('<br>');
@@ -134,7 +151,6 @@ function displayLyrics(data) {
     songP.append(songHeaderEl);
     songP.append(br);
     songP.append(songInfoEl);
-    songList.append(backBtn);
     songList.append(songP);
 
     var lyricsP = $('<p>');
@@ -149,7 +165,53 @@ function displayLyrics(data) {
 
     songHeaderEl.text(song);
     songInfoEl.text(artist + ", " + album);
-    lyricsP.text(lyrics);
+    lyricsP.text("\n" + lyrics);
+    var recentInfo = song + " - " + artist;
+
+    if ((!recentObject.recentList.includes(recentInfo)) || (recentObject.recentList.length === 0)) {
+        recentObject.recentList.push(recentInfo);
+        recentObject.recentURL.push(lyricsAPI);
+
+        localStorage.setItem("recentObject", JSON.stringify(recentObject));
+        var newRecent = $('<button class="recent">');
+        newRecent.attr("id", recentCount);
+        recentCount++;
+        newRecent.text(recentInfo);
+        recentListEl.append(newRecent);
+
+    }
 };
 
-songList.on('click', '#return', () => { fetchSongs(userSearch) })
+
+function refetchLyrics(recentObject) {
+    var songIndex = event.target.getAttribute('id');
+    if (songIndex != null) {
+        songIndex = Number(songIndex);
+        lyricsAPI = [recentObject.recentURL[songIndex]];
+
+        fetch(lyricsAPI)
+            .then(function (response) {
+                if (response.ok) {
+                    response.json().then(function (data) {
+                        displayLyrics(data);
+                    });
+                }
+            })
+    }
+};
+
+function renderRecentList() {
+    var storedRecentObject = JSON.parse(localStorage.getItem("recentObject"));
+    if (storedRecentObject != null) {
+        for (i = 0; i < storedRecentObject.recentList.length; i++) {
+        var newRecent = $('<button class="recent">');
+        newRecent.attr("id", i);
+        newRecent.text(storedRecentObject.recentList[i]);
+        recentListEl.append(newRecent);
+        }
+    }
+};
+
+songList.on('click', '#return', () => { fetchSongs(userSearch) });
+recentListEl.on('click', '.recent', () => refetchLyrics(recentObject));
+renderRecentList();
