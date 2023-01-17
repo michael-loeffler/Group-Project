@@ -43,8 +43,6 @@ function fetchSongs(userSearch) {
                 response.json().then(function (data) {
                     displaySongs(data);
                     songData = data;
-                    console.log(songData);
-
                 });
             }
         })
@@ -246,7 +244,7 @@ function renderRecentList() {
     }
 };
 
-function fetchQueueLyrics(queueObject, event) {
+function fetchQueueLyrics(queueObject) {
     var songIndex = event.target.getAttribute('id');
     if (songIndex != null) {
         songIndex = Number(songIndex);
@@ -280,7 +278,7 @@ songList.on("click", 'article', () => { fetchLyrics(lyricsArray) });
 songList.on('click', '#return', () => { fetchSongs(userSearch) });
 recentListEl.on('click', '.recent', () => { fetchRecentLyrics(recentObject) });
 renderRecentList();
-queueListEl.on('click', '.queue', () => { fetchQueueLyrics(recentObject) });
+queueListEl.on('click', '.queue', () => { fetchQueueLyrics(queueObject) });
 renderQueueList();
 songList.on('click', 'i', () => { displayQueue(songData) });
 
