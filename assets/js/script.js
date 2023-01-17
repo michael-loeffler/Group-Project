@@ -1,4 +1,4 @@
-var userInputEl = $('#artistSearch');
+var userInputEl = $('#musicInput');
 var songList = $('#songList')
 
 var apiKeyLyrics = "apikey=505e83WfFdaB9foGaPW7eLXwNQ1ZV1JIFPwKCXuAaGoDi0vOgXtMdIQ6";
