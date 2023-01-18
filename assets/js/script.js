@@ -273,12 +273,30 @@ function renderQueueList() {
     }
 };
 
+function clearRecentList() {
+    recentListEl.empty();
+    recentListEl.text('Recent Selections');
+    var clearBtn = $('<button class="clear">Clear</button>')
+    recentListEl.append(clearBtn);
+    localStorage.clear();
+}
+
+function clearQueueList() {
+    queueListEl.empty();
+    queueListEl.text('Up Next');
+    var clearBtn = $('<button class="clear">Clear</button>')
+    queueListEl.append(clearBtn);
+    localStorage.clear();
+}
 
 songList.on("click", 'article', () => { fetchLyrics(lyricsArray) });
+songList.on('click', 'i', () => { displayQueue(songData) });
 songList.on('click', '#return', () => { fetchSongs(userSearch) });
+
+
 recentListEl.on('click', '.recent', () => { fetchRecentLyrics(recentObject) });
 renderRecentList();
 queueListEl.on('click', '.queue', () => { fetchQueueLyrics(queueObject) });
 renderQueueList();
-songList.on('click', 'i', () => { displayQueue(songData) });
-
+recentListEl.on('click', '.clear', clearRecentList);
+queueListEl.on('click', '.clear', clearQueueList);
