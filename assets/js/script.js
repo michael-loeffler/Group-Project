@@ -10,20 +10,26 @@ var userSearch = "";
 var lyricsArray = [];
 var lyricsAPI = "";
 var songData = [];
-var recentCount = 0;
-var queueCount = 0;
+var recentCount = localStorage.getItem("recentCount");
+if (recentCount === null) {
+    recentCount = 0;
+}
+var queueCount = localStorage.getItem("queueCount");
+if (queueCount === null) {
+    queueCount = 0;
+}
 //- Builds recentObject either from scratch or with data from localStorage -//
 var recentObject = JSON.parse(localStorage.getItem("recentObject"));
 if (recentObject === null) {
-    recentList = [];
-    recentURL = [];
+    var recentList = [];
+    var recentURL = [];
     recentObject = { recentList, recentURL };
 }
 //- Builds queueObject either from scratch or with data from localStorage -//
 var queueObject = JSON.parse(localStorage.getItem("queueObject"));
 if (queueObject === null) {
-    queueList = [];
-    queueURL = [];
+    var queueList = [];
+    var queueURL = [];
     queueObject = { queueList, queueURL };
 }
 
@@ -74,7 +80,7 @@ function displaySongs(data) {
     songList.append(songListHeader);
     lyricsArray = [];
     var songArray = [];
-    var lyricsCount = "";
+    var lyricsCount = 0;
     // goes through the JSON object provided by the fetchSongs function, obtains the pertinent information, determines which songs have lyrics, and when it finds a song it hasn't found before, it creates the HTML elements to display that song's information on the page. //
     for (i = 0; ((i < data.result.length) && (songArray.length < 10)); i++) { // this tells the app to go through (up to) the entire object to find no more than 10 unique songs. //
         var song = data.result[i].track;
@@ -199,6 +205,7 @@ function displayLyrics(data) {
         var newRecent = $('<button class="recent">');
         newRecent.attr("id", recentCount);
         recentCount++;
+        localStorage.setItem("recentCount", recentCount);
         newRecent.text(recentInfo);
         recentListEl.append(newRecent);
         
@@ -224,6 +231,7 @@ function displayQueue(songData) {
             var newQueue = $('<button class="queue">');
             newQueue.attr("id", queueCount);
             queueCount++;
+            localStorage.setItem("queueCount", queueCount);
             newQueue.text(queueInfo);
             queueListEl.append(newQueue);
             
@@ -295,6 +303,7 @@ function clearRecentList() {
     var clearBtn = $('<button class="clear">Clear</button>')
     recentListEl.append(clearBtn);
     localStorage.removeItem('recentObject');
+    localStorage.removeItem('recentCount');
 };
 //- The clearQueueList function will empty the contents of the queueListEl, replace the heading and clear button, and clear the localStorage. This allows the user to erase the queue list and erase that data from localStorage so that it is not retained on page refresh. -//
 function clearQueueList() {
@@ -303,6 +312,7 @@ function clearQueueList() {
     var clearBtn = $('<button class="clear">Clear</button>')
     queueListEl.append(clearBtn);
     localStorage.removeItem('queueObject');
+    localStorage.removeItem('queueCount');
 };
    
 var drinkInputEl = $('#drinkSearch');
