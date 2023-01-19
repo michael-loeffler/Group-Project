@@ -74,7 +74,7 @@ function displaySongs(data) {
     songList.append(songListHeader);
     lyricsArray = [];
     var songArray = [];
-    var lyricsCount = "";
+    var lyricsCount = 0;
     // goes through the JSON object provided by the fetchSongs function, obtains the pertinent information, determines which songs have lyrics, and when it finds a song it hasn't found before, it creates the HTML elements to display that song's information on the page. //
     for (i = 0; ((i < data.result.length) && (songArray.length < 10)); i++) { // this tells the app to go through (up to) the entire object to find no more than 10 unique songs. //
         var song = data.result[i].track;
