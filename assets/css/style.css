@@ -18,3 +18,19 @@ h2{
     color:rgb(24,35,67);
     font-weight: bolder;
 }
+    #randomDrink {
+    max-width: 350px;
+    text-align: center;
+    padding: 30px 30px 12px 30px; 
+    border-radius: 5px; 
+  } 
+  #randomDrink h1 {
+    margin: 0 0 15px 0;
+    text-transform: uppercase;
+  }
+  #randomDrink img {
+    max-width: 300px;
+    border: 6px solid #fff;
+    border-radius: 150px;
+  }
+  
