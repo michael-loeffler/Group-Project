@@ -148,90 +148,191 @@ function displayLyrics(data) {
     songInfoEl.text(artist + ", " + album);
     lyricsP.text(lyrics);
 };
-// var apiKey = 1
-var drinkName = "Margarita";
-var drinkIngredient = "vodka";
-var drinkRandom = '';
-var data = '';
 
-function fetchCocktail (drinkName) {
-    var cocktailName = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=" + drinkName;
-    console.log(cocktailName);
-    fetch(cocktailName)
-    .then(function (response) {
-        // console.log(response);
-        if(response.ok) {
-        response.json().then(function(data){
-            console.log(data);
-            });
-        }
-    })
-};
 
-// fetchCocktail(drinkName);
-// console.log(drinkName.length);
 
-async function getapi(url) {
-    var response = await fetch (drinkName);
+var drinkInputEl = $('#drinkSearch');
+var drinkList = $('#drinkList')
+var drinkURL = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s="
+var drinkSearch = "";
+var cocktailName = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=" + drinkSearch;
+var randomURL = "https://www.thecocktaildb.com/api/json/v1/1/random.php"
+var randomBtnEl = $('#randomBtn');
+var ingredientSearch = "https://www.thecocktaildb.com/api/json/v1/1/search.php?i=" + drinkIngredient;
+var drinkIngredient = "";
+var drinkBtnEl = $("#drinkBtn");
+var mainIngredientBtnEl = $('#mainIngredientBtn');
 
-    var data = await response.json();
+
+fetch(cocktailName)
+  .then((response) => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw new Error("NETWORK RESPONSE ERROR");
+    }
+  })
+  .then(data => {
     console.log(data);
-    show (data); 
-}
+    displaydrinkInput(data)
+  })
+  .catch((error) => console.error("FETCH ERROR:", error));
 
-fetchCocktail(drinkName);
+  drinkBtnEl.on("click", displaydrinkInput);
 
-function show(data) {
-    let tab = 
-        `<tr>
-          <th>strDrink</th>
-          <th>strDrinkThumb</th>
-          <th>strInstructions</th>
-         </tr>`;
-}
+  function displaydrinkInput(data) {
+    var cocktail = data.drinks[0];
+    var userCocktailDiv = document.getElementById("drinkSearch");
+    
+    var cocktailName = cocktail.strDrink;
+    var heading = document.createElement("h1");
+    heading.innerHTML = cocktailName;
+    userCocktailDiv.appendChild(heading);
 
-for (let r of data.drinks) {
-    tab += `<tr> 
-<td>${r.strDrink} </td>
-<td>${r.office}</td>
-<td>${r.position}</td> 
-<td>${r.salary}</td>          
-</tr>`;
-}
+    var cocktailImg = document.createElement("img");
+    cocktailImg.src = cocktail.strDrinkThumb;
+    userCocktailDiv.appendChild(cocktailImg);
 
+    var cocktailIngredients = document.createElement("ul");
+    userCocktailDiv.appendChild(cocktailIngredients);  
+  
+    var getIngredients = Object.keys(cocktail)
+    .filter(function (ingredient) {
+      return ingredient.indexOf("strIngredient") == 0;
+    })
+    .reduce(function (ingredients, ingredient) {
+      if (cocktail[ingredient] != null) {
+        ingredients[ingredient] = cocktail[ingredient];
+      }
+      return ingredients;
+    }, {});
 
+    for (let key in getIngredients) {
+        let value = getIngredients[key];
+        listItem = document.createElement("li");
+        listItem.innerHTML = value;
+        cocktailIngredients.appendChild(listItem);
+  }
 
-// function fetchCocktail (drinkIngredient) {
-//     var cocktailIngredient = "https://www.thecocktaildb.com/api/json/v1/1/search.php?i=" + drinkIngredient;
-//     console.log(cocktailIngredient);
-//     fetch(cocktailIngredient)
-//     .then(function (response) {
-//         // console.log(response);
-//         if(response.ok) {
-//         response.json().then(function(data){
-//             console.log(data);
-//             });
-//         }
-//     })
-// };
-
-// fetchCocktail(drinkIngredient);
-
-// function fetchCocktail (drinkRandom) {
-//     var cocktailRandom = "https://www.thecocktaildb.com/api/json/v1/1/random.php";
-//     console.log(cocktailRandom);
-//     fetch(cocktailRandom)
-//     .then(function (response) {
-//         // console.log(response);
-//         if(response.ok) {
-//         response.json().then(function(data){
-//             console.log(data);
-//             });
-//         }
-//     })
-// };
-
-// fetchCocktail(drinkRandom);
+        var cocktailName = cocktail.strInstructions;
+        var heading = document.createElement("h2");
+        heading.innerHTML = cocktailName;
+        userCocktailDiv.appendChild(heading);
+    };
 
 
+  fetch(ingredientSearch)
+  .then((response) => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw new Error("NETWORK RESPONSE ERROR");
+    }
+  })
+  .then(data => {
+    console.log(data);
+    displayCocktailIngredient(data)
+  })
+  .catch((error) => console.error("FETCH ERROR:", error));
+
+  mainIngredientBtnEl.on("click", displayCocktailIngredient);
+
+  function displayCocktailIngredient(data) {
+    var cocktailByIngredient = data.drinks[0];
+    var ingredientCocktailDiv = document.getElementById("ingredientSearch");
+    
+    var cocktailMainIngredient = cocktailByIngredient.strDrink;
+    var heading = document.createElement("h1");
+    heading.innerHTML = cocktailMainIngredient;
+    ingredientCocktailDiv.appendChild(heading);
+
+    var cocktailByIngredientImg = document.createElement("img");
+    cocktailByIngredientImg.src = cocktailByIngredient.strDrinkThumb;
+    ingredientCocktailDiv.appendChild(cocktailImg);
+
+    var mainCocktailIngredients = document.createElement("ul");
+    ingredientCocktailDiv.appendChild(mainCocktailIngredients);  
+  
+    var getIngredients = Object.keys(cocktailByIngredientl)
+    .filter(function (ingredient) {
+      return ingredient.indexOf("strIngredient") == 0;
+    })
+    .reduce(function (ingredients, ingredient) {
+      if (cocktailMainIngredient[ingredient] != null) {
+        ingredients[ingredient] = ccocktailMainIngredient[ingredient];
+      }
+      return ingredients;
+    }, {});
+
+    for (let key in getIngredients) {
+        let value = getIngredients[key];
+        listItem = document.createElement("li");
+        listItem.innerHTML = value;
+        cocktailIngredientsSearch.appendChild(listItem);
+  }
+    
+        var cocktailMainIngredient = cocktailByIngredient.strInstructions;
+        var heading = document.createElement("h2");
+        heading.innerHTML = cocktailMainIngredient;
+        ingredientCocktailDiv.appendChild(heading);
+  };
+
+
+
+
+
+fetch(randomURL)
+  .then((response) => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw new Error("NETWORK RESPONSE ERROR");
+    }
+  })
+  .then(data => {
+    console.log(data);
+    displayrandomCocktail(data)
+  })
+  .catch((error) => console.error("FETCH ERROR:", error));
+
+  randomBtnEl.on("click", displayrandomCocktail);
+
+  function displayrandomCocktail(data) {
+    var randomCocktail = data.drinks[0];
+    var randomCocktailDiv = document.getElementById("randomDrink");
+    
+    var randomCocktailName = randomCocktail.strDrink;
+    var heading = document.createElement("h1");
+    heading.innerHTML = randomCocktailName;
+    randomCocktailDiv.appendChild(heading);
+
+    var randomCocktailImg = document.createElement("img");
+    randomCocktailImg.src = randomCocktail.strDrinkThumb;
+    randomCocktailDiv.appendChild(randomCocktailImg);
+
+    var randomCocktailIngredients = document.createElement("ul");
+    randomCocktailDiv.appendChild(randomCocktailIngredients);  
+  
+    var getIngredients = Object.keys(randomCocktail)
+    .filter(function (ingredient) {
+      return ingredient.indexOf("strIngredient") == 0;
+    })
+    .reduce(function (ingredients, ingredient) {
+      if (randomCocktail[ingredient] != null) {
+        ingredients[ingredient] = randomCocktail[ingredient];
+      }
+      return ingredients;
+    }, {});
+
+    for (let key in getIngredients) {
+        let value = getIngredients[key];
+        listItem = document.createElement("li");
+        listItem.innerHTML = value;
+        randomCocktailIngredients.appendChild(listItem);
+  }
+        var randomCocktailName = randomCocktail.strInstructions;
+        var heading = document.createElement("h2");
+        heading.innerHTML = randomCocktailName;
+        randomCocktailDiv.appendChild(heading);
+        };
 

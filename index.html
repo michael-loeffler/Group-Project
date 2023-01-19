@@ -53,12 +53,54 @@
     </div>
   </main>
   <footer>
-    <div class="d-flex justify-content-center">
-      <div class="spinner-border">
+    <div class="tile is-ancestor">
+      <div class="tile is-4 is-vertical is-parent">
+      </div> 
+      <h1>Drinks:</h1>
+
+      <div class="field is-child">
+        <label class="label">Look up by Drink Name</label>
+        <div class="control">
+          <input id="drinkSearch" class="input" type="text" placeholder="Tequila Sunrise">
+        </div>
+        <div class="control">
+          <button class="button is-primary is-light id=drinkBtn">
+            Search
+          </button>
+        </div>
       </div>
-  </div>
-  <h1>Drinks</h1>
-  <p> </p>
+
+      <div class="field is-child">
+        <label class="label">Look up by Main Ingredient</label>
+        <div class="control">
+          <input id="ingredientSearch" class="input" type="text" placeholder="Vodka">
+        </div>
+        <div class="control">
+          <button class="button is-primary is-light id=mainIngredientBtn">
+            Search
+          </button>
+        </div>
+      </div>
+
+      <div class="field is-child is-horizontal">
+        <div class="field-label">
+          <!-- Left empty for spacing -->
+        </div>
+        <div class="field-body">
+          <div class="field">
+            <div class="control" id="randomDrink">
+              <button class="button is-primary id=randomBtn">
+                Random Drink!
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="cocktail" class="is-4">
+      </div>
+    </div>
+ 
   </footer>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.3/dayjs.min.js"
