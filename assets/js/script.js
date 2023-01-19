@@ -1,39 +1,57 @@
+//-- DOM DECLARATIONS --//
 var userInputEl = $('#musicInput');
 var songList = $('#songList')
 var recentListEl = $('#recent');
 var queueListEl = $('#queue');
 
+//-- VARIABLE INITIALIZATIONS --//
 var apiKeyLyrics = "apikey=505e83WfFdaB9foGaPW7eLXwNQ1ZV1JIFPwKCXuAaGoDi0vOgXtMdIQ6";
 var userSearch = "";
 var lyricsArray = [];
+var lyricsAPI = "";
+var songData = [];
+var recentCount = 0;
+var queueCount = 0;
+//- Builds recentObject either from scratch or with data from localStorage -//
 var recentObject = JSON.parse(localStorage.getItem("recentObject"));
 if (recentObject === null) {
     recentList = [];
     recentURL = [];
     recentObject = { recentList, recentURL };
 }
-var recentCount = 0;
-
+//- Builds queueObject either from scratch or with data from localStorage -//
 var queueObject = JSON.parse(localStorage.getItem("queueObject"));
 if (queueObject === null) {
     queueList = [];
     queueURL = [];
     queueObject = { queueList, queueURL };
 }
-var queueCount = 0;
 
-var lyricsAPI = "";
-var songData = [];
-
+//-- EVENT LISTENERS --//
 userInputEl.on('change', getUserInput);
+//- Click listeners placed on the song list -//
+songList.on("click", 'article', () => { fetchLyrics(lyricsArray) });
+songList.on('click', 'i', () => { displayQueue(songData) });
+songList.on('click', '#return', () => { fetchSongs(userSearch) });
+//- Click listeners placed on the recent/queue lists -//
+recentListEl.on('click', '.recent', () => { fetchRecentLyrics(recentObject) });
+queueListEl.on('click', '.queue', () => { fetchQueueLyrics(queueObject) });
+recentListEl.on('click', '.clear', clearRecentList);
+queueListEl.on('click', '.clear', clearQueueList);
 
+//-- FUNCTION CALLS TO BE RUN ON PAGE LOAD --//
+renderRecentList();
+renderQueueList();
+
+//------------------------------------------------- FUNCTIONS -------------------------------------------------//
+//- The getUserInput function obtains the data that the user enters into the search box and processes it (i.e., trimming extra spaces and then getting it to a state that can be concatenated into a URL) for use by the fetchSongs function, which it then calls. -//
 function getUserInput() {
     userSearch = userInputEl.val().trim();
     userSearch = encodeURI(userSearch);
     userInputEl.val("");
     fetchSongs(userSearch);
 };
-
+//- The fetchSongs function takes in the user's processed search query and concatenates it into a fetch URL for the Happi Music API. The function performs the fetch and then passes the data it receives to the displaySongs function. -//
 function fetchSongs(userSearch) {
     var songAPI = "https://api.happi.dev/v1/music?q=" + userSearch + "&limit=20&type=:type&lyrics=1&" + apiKeyLyrics
 
@@ -47,17 +65,17 @@ function fetchSongs(userSearch) {
             }
         })
 };
-
+//- The displaySongs function manipulates the data obtained from the fetch in order to create all HTML DOM elements to  display a list of songs on screen that have lyrics data associated with them to be acted on when a user clicks on a song. -//
 function displaySongs(data) {
-    songList.empty();
+    songList.empty(); // resets the area with a blank slate to add new song elements to //
     var songListHeader = $('<h2>');
     songListHeader.text("Select a song to see its lyrics!");
     songList.append(songListHeader);
     lyricsArray = [];
     var songArray = [];
     var lyricsCount = "";
-
-    for (i = 0; ((i < data.result.length) && (songArray.length < 10)); i++) {
+    // goes through the JSON object provided by the fetchSongs function, obtains the pertinent information, determines which songs have lyrics, and when it finds a song it hasn't found before, it creates the HTML elements to display that song's information on the page. //
+    for (i = 0; ((i < data.result.length) && (songArray.length < 10)); i++) { // this tells the app to go through (up to) the entire object to find no more than 10 unique songs. //
         var song = data.result[i].track;
         var artist = data.result[i].artist;
         var album = data.result[i].album;
@@ -69,7 +87,7 @@ function displaySongs(data) {
             songArray.push(song);
             var songDivEl = $('<article>');
             songDivEl.attr("class", "media level-left");
-            songDivEl.attr("id", lyricsCount);
+            songDivEl.attr("id", lyricsCount); // creates an "index" for this song that can be used to pull data from a stored array later when this element is clicked //
             var figureEl = $('<figure>');
             figureEl.attr("class", "media-left");
             var pEl = $('<p>');
@@ -99,7 +117,7 @@ function displaySongs(data) {
             iconSpan.attr("class", "icon is-large");
             var iconI = $('<i>');
             iconI.attr("class", "fa-solid fa-heart-circle-plus");
-            iconI.attr("id", lyricsCount);
+            iconI.attr("id", lyricsCount); // creates an "index" for this song that can be used to pull data from a stored array later when this element is clicked //
             lyricsCount++;
             iconSpan.append(iconI);
             iconA.append(iconI);
@@ -114,18 +132,15 @@ function displaySongs(data) {
             songHeaderEl.text(song);
             songInfoEl.text(artist + ", " + album);
 
-            var lyricsAPI = data.result[i].api_lyrics + "?" + apiKeyLyrics;
-            lyricsArray.push(lyricsAPI);
+            var lyricsAPI = data.result[i].api_lyrics + "?" + apiKeyLyrics; // concatenates a fetch URL that is usable by the Happi Music API,
+            lyricsArray.push(lyricsAPI); // and adds it to an array for later access 
 
         }
 
     }
 
 };
-
-
-
-
+//- The fetchLyrics function obtains the id of the item that was clicked on, and the uses that as an index to pull the associated lyrics api call. The function performs the fetch and then passes the data it receives to the displayLyrics function. -//
 function fetchLyrics(lyricsArray) {
     var songIndex = event.target.getAttribute('id');
     if (songIndex != null) {
@@ -142,7 +157,7 @@ function fetchLyrics(lyricsArray) {
         })
     }
 };
-
+//- The displayLyrics function will empty the contents of the songList element, check if the user searched for anything yet (to determine whether to add a return to search button"), create all HTML DOM elements to display the song info and lyrics on the page, formats the lyrics, and displays the information found for that song on screen. -//
 function displayLyrics(data) {
     songList.empty();
     
@@ -174,7 +189,7 @@ function displayLyrics(data) {
     songInfoEl.text(artist + ", " + album);
     lyricsP.text("\n" + lyrics);
     var recentInfo = song + " - " + artist;
-    
+    // When a song is clicked on and this function runs, if the recent list doesn't already have that song, it creates a button (with an id that will later be used as an index) for it and adds it to the recent list. The function also adds the song info and lyrics API call to an object and sends the object to localStorage to be used by the renderRecentList function on page load. -//
     if ((!recentObject.recentList.includes(recentInfo)) || (recentObject.recentList.length === 0)) {
         recentObject.recentList.push(recentInfo);
         recentObject.recentURL.push(lyricsAPI);
@@ -188,7 +203,7 @@ function displayLyrics(data) {
         
     }
 };
-
+//- The displayQueue function is passed the songData variable created by the fetchSongs function, obtains the id of the item that was clicked on, uses it as an index to pull the associated information for that song from the songData, and, if the queue list doesn't already have that song, it creates a button for it and adds it to the queue list. The function finally adds the song info and lyrics API call to an object and sends the object to localStorage to be used by the renderQueueList function on page load. -//
 function displayQueue(songData) {
     event.stopPropagation();
     var songIndex = event.target.getAttribute('id');
@@ -213,8 +228,8 @@ function displayQueue(songData) {
             
         }
     }
-}
-
+};
+//- The fetchRecentLyrics function obtains the id of the item that was clicked on, and the uses that as an index to pull the associated lyrics api call from the recentObject object. The function performs the fetch and then passes the data it receives to the displayLyrics function. This allows the user to recall a lyric page of a song on the queue list. -//
 function fetchRecentLyrics(recentObject) {
     var songIndex = event.target.getAttribute('id');
     if (songIndex != null) {
@@ -231,7 +246,7 @@ function fetchRecentLyrics(recentObject) {
         })
     }
 };
-
+//- The renderRecentList function obtains the information stored in the localStorage under the recentObject key, and if there is in fact information stored there, it creates a list of buttons with the information from storage. This allows the user's information to persist on page refresh. -//
 function renderRecentList() {
     var storedRecentObject = JSON.parse(localStorage.getItem("recentObject"));
     if (storedRecentObject != null) {
@@ -243,7 +258,7 @@ function renderRecentList() {
         }
     }
 };
-
+//- The fetchQueueLyrics function obtains the id of the item that was clicked on, and the uses that as an index to pull the associated lyrics api call from the queueObject object. The function performs the fetch and then passes the data it receives to the displayLyrics function. This allows the user to recall a lyric page of a song on the queue list. -//
 function fetchQueueLyrics(queueObject) {
     var songIndex = event.target.getAttribute('id');
     if (songIndex != null) {
@@ -260,7 +275,7 @@ function fetchQueueLyrics(queueObject) {
         })
     }
 };
-
+//- The renderQueueList function obtains the information stored in the localStorage under the queueObject key, and if there is in fact information stored there, it creates a list of buttons with the information from storage. This allows the user's information to persist on page refresh. -//
 function renderQueueList() {
     var storedQueueObject = JSON.parse(localStorage.getItem("queueObject"));
     if (storedQueueObject != null) {
@@ -272,13 +287,19 @@ function renderQueueList() {
         }
     }
 };
-
-
-songList.on("click", 'article', () => { fetchLyrics(lyricsArray) });
-songList.on('click', '#return', () => { fetchSongs(userSearch) });
-recentListEl.on('click', '.recent', () => { fetchRecentLyrics(recentObject) });
-renderRecentList();
-queueListEl.on('click', '.queue', () => { fetchQueueLyrics(queueObject) });
-renderQueueList();
-songList.on('click', 'i', () => { displayQueue(songData) });
-
+//- The clearRecentList function will empty the contents of the recentListEl, replace the heading and clear button, and clear the localStorage. This allows the user to erase the recent list and erase that data from localStorage so that it is not retained on page refresh. -//
+function clearRecentList() {
+    recentListEl.empty();
+    recentListEl.text('Recent Selections');
+    var clearBtn = $('<button class="clear">Clear</button>')
+    recentListEl.append(clearBtn);
+    localStorage.clear();
+};
+//- The clearQueueList function will empty the contents of the queueListEl, replace the heading and clear button, and clear the localStorage. This allows the user to erase the queue list and erase that data from localStorage so that it is not retained on page refresh. -//
+function clearQueueList() {
+    queueListEl.empty();
+    queueListEl.text('Up Next');
+    var clearBtn = $('<button class="clear">Clear</button>')
+    queueListEl.append(clearBtn);
+    localStorage.clear();
+};
