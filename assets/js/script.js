@@ -30,7 +30,8 @@ if (queueObject === null) {
 //-- EVENT LISTENERS --//
 userInputEl.on('change', getUserInput);
 //- Click listeners placed on the song list -//
-songList.on("click", 'article', () => { fetchLyrics(lyricsArray) });
+songList.on("click", 'article', () => { 
+   if (event.target.className !== 'fa-solid fa-heart-circle-plus') { fetchLyrics(lyricsArray)} });
 songList.on('click', 'i', () => { displayQueue(songData) });
 songList.on('click', '#return', () => { fetchSongs(userSearch) });
 //- Click listeners placed on the recent/queue lists -//
@@ -190,7 +191,7 @@ function displayLyrics(data) {
     lyricsP.text("\n" + lyrics);
     var recentInfo = song + " - " + artist;
     // When a song is clicked on and this function runs, if the recent list doesn't already have that song, it creates a button (with an id that will later be used as an index) for it and adds it to the recent list. The function also adds the song info and lyrics API call to an object and sends the object to localStorage to be used by the renderRecentList function on page load. -//
-    if ((!recentObject.recentList.includes(recentInfo)) || (recentObject.recentList.length === 0)) {
+    if ((!recentObject.recentList.includes(recentInfo)) || (recentObject.recentList.length === 0) || (!queueObject.queueList.includes(recentInfo))) {
         recentObject.recentList.push(recentInfo);
         recentObject.recentURL.push(lyricsAPI);
 
@@ -293,7 +294,7 @@ function clearRecentList() {
     recentListEl.text('Recent Selections');
     var clearBtn = $('<button class="clear">Clear</button>')
     recentListEl.append(clearBtn);
-    localStorage.clear();
+    localStorage.removeItem('recentObject');
 };
 //- The clearQueueList function will empty the contents of the queueListEl, replace the heading and clear button, and clear the localStorage. This allows the user to erase the queue list and erase that data from localStorage so that it is not retained on page refresh. -//
 function clearQueueList() {
@@ -301,5 +302,5 @@ function clearQueueList() {
     queueListEl.text('Up Next');
     var clearBtn = $('<button class="clear">Clear</button>')
     queueListEl.append(clearBtn);
-    localStorage.clear();
+    localStorage.removeItem('queueObject');
 };
