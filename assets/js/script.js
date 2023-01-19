@@ -191,7 +191,7 @@ function displayLyrics(data) {
     lyricsP.text("\n" + lyrics);
     var recentInfo = song + " - " + artist;
     // When a song is clicked on and this function runs, if the recent list doesn't already have that song, it creates a button (with an id that will later be used as an index) for it and adds it to the recent list. The function also adds the song info and lyrics API call to an object and sends the object to localStorage to be used by the renderRecentList function on page load. -//
-    if ((!recentObject.recentList.includes(recentInfo)) || (recentObject.recentList.length === 0) || (!queueObject.queueList.includes(recentInfo))) {
+    if ((!recentObject.recentList.includes(recentInfo)) || (recentObject.recentList.length === 0)) {
         recentObject.recentList.push(recentInfo);
         recentObject.recentURL.push(lyricsAPI);
 
