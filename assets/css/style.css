@@ -1,3 +1,23 @@
+body {
+    background-color: rgb(152, 152, 171);
+}
+.box{
+    background: linear-gradient(to right, rgb(29, 75, 213), rgb(159, 168, 190));
+    color: black;
+}
+.label{
+    font-weight: bolder;
+}
+.w-110{
+    width:110px;
+}
+#songList{
+    padding-top: 10%;
+}
+h2{
+    color:rgb(24,35,67);
+    font-weight: bolder;
+}
     #randomDrink {
     max-width: 350px;
     text-align: center;
