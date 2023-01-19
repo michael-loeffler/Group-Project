@@ -30,7 +30,8 @@ if (queueObject === null) {
 //-- EVENT LISTENERS --//
 userInputEl.on('change', getUserInput);
 //- Click listeners placed on the song list -//
-songList.on("click", 'article', () => { fetchLyrics(lyricsArray) });
+songList.on("click", 'article', () => { 
+   if (event.target.className !== 'fa-solid fa-heart-circle-plus') { fetchLyrics(lyricsArray)} });
 songList.on('click', 'i', () => { displayQueue(songData) });
 songList.on('click', '#return', () => { fetchSongs(userSearch) });
 //- Click listeners placed on the recent/queue lists -//
@@ -293,7 +294,7 @@ function clearRecentList() {
     recentListEl.text('Recent Selections');
     var clearBtn = $('<button class="clear">Clear</button>')
     recentListEl.append(clearBtn);
-    localStorage.clear();
+    localStorage.removeItem('recentObject');
 };
 //- The clearQueueList function will empty the contents of the queueListEl, replace the heading and clear button, and clear the localStorage. This allows the user to erase the queue list and erase that data from localStorage so that it is not retained on page refresh. -//
 function clearQueueList() {
@@ -301,11 +302,9 @@ function clearQueueList() {
     queueListEl.text('Up Next');
     var clearBtn = $('<button class="clear">Clear</button>')
     queueListEl.append(clearBtn);
-    localStorage.clear();
+    localStorage.removeItem('queueObject');
 };
-
-
-
+   
 var drinkInputEl = $('#drinkSearch');
 var drinkList = $('#drinkList')
 var drinkURL = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s="
