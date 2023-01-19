@@ -76,11 +76,11 @@ For a cocktail search, the user’s display is dependent on what they input. If 
 
 ## Credits
 
-Bulma CSS Framework
-Happi Music API
-The Cocktail DB API
-Fontawesome icons
-jQuery
+* Bulma CSS Framework
+* Happi Music API
+* The Cocktail DB API
+* Fontawesome icons
+* jQuery
 
 ## Names of contributing developers
 * Michael Loeffler (michael-loeffler)
