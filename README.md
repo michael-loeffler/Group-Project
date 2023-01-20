@@ -46,12 +46,10 @@ THEN the song information is stored in localStorage and displayed in an "Up Next
 WHEN I reload the page
 THEN all songs stored in the "Recent Selections" and "Up Next" lists remain on the page
 WHEN I click on the "Clear" button for either "Recent Selections" or "Up Next", then those songs are erased from the screen and from localStorage
-WHEN I search for a cocktail by name or main ingredient 
-THEN I am presented with a list of cocktails that have that name or main ingredient
-WHEN I view the list of cocktails
-THEN I am presented with the cocktail name, a cocktail image, the cocktail ingredients, and instructions to make the cocktail
 WHEN I click on the random drink button
 THEN I am presented with a random drink 
+WHEN I view the random drink
+THEN I am presented with the cocktail name, a cocktail image, the cocktail ingredients, and instructions to make the cocktail
 ```
 
 ## Installation
@@ -60,11 +58,11 @@ N/A
 
 ## Usage
 
-Karaoke Knights functions by first accepting user input. A user can input data into 2 main areas: Artist/Song search or Cocktail search. The application processes and formats user input, and then passes it as a query parameter to the associated API fetch. Then the desired data is retrieved from the JSON response of the API call to then be formatted and added to the page dynamically using JavaScript to create new HTML elements. 
+Karaoke Knights functions by first accepting user input. A user can input data into one main area: Artist and Song search. The application processes and formats user input, and then passes it as a query parameter to the associated API fetch. Then the desired data is retrieved from the JSON response of the API call to then be formatted and added to the page dynamically using JavaScript to create new HTML elements. 
 
 For an artist/song search, the user is presented with a list of songs related to the search with song name, artist name, and album name displayed along with album art. As these elements are created, some are assigned a number as an id which will serve as an index for an array that is simultaneously being built containing the associated lyrics API urls. When a user clicks on a song, the id of the song that was clicked on is obtained and used to locate the associated lyrics API url. Another fetch is performed and the user is now shown the lyrics for that song. When a user chooses to view the lyrics for a song, the song info is added to the "Recent Selections" list. The HTML elements are created to display the song on the list, and the song info and lyrics API url is added to an object that is passed into localStorage. That way, if the user clicks on that song in the "Recent Selections" list, they are again shown the lyrics of that song, and this "Recent Selections" list persists on page reload. A similar process is executed when a user clicks the heart icon next to a song to add it to the "Up Next" list (queue). Users are able to clear their "Recent Selections" and "Up Next" list (this process also clears that data from localStorage). Finally, when viewing a lyrics page, a user can click “Return to Search” and will be presented again with the song results from their most recent search.
 
-For a cocktail search, the user’s display is dependent on what they input. If they search for cocktails by name (e.g., Margarita), they are presented with a list of cocktails that relate to that name. If the user searches by ingredient, they are presented with a list of cocktails with that as their main ingredient. Finally, a user can choose to click a button to view a random cocktail. Any time a cocktail is displayed, the page features the name of the cocktail, an image, a list of ingredients, and instructions on how to make the drink. For each of these scenarios, the desired data is formatted and added to the page dynamically using JavaScript to create new HTML elements. 
+A user can choose to click a button to view a random cocktail. Any time a cocktail is displayed, the page features the name of the cocktail, an image, a list of ingredients, and instructions on how to make the drink. For each of these scenarios, the desired data is formatted and added to the page dynamically using JavaScript to create new HTML elements. 
 
 
 ## Link to deployed application:
