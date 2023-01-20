@@ -10,27 +10,34 @@ var userSearch = "";
 var lyricsArray = [];
 var lyricsAPI = "";
 var songData = [];
-var recentCount = 0;
-var queueCount = 0;
+var recentCount = localStorage.getItem("recentCount");
+if (recentCount === null) {
+    recentCount = 0;
+}
+var queueCount = localStorage.getItem("queueCount");
+if (queueCount === null) {
+    queueCount = 0;
+}
 //- Builds recentObject either from scratch or with data from localStorage -//
 var recentObject = JSON.parse(localStorage.getItem("recentObject"));
 if (recentObject === null) {
-    recentList = [];
-    recentURL = [];
+    var recentList = [];
+    var recentURL = [];
     recentObject = { recentList, recentURL };
 }
 //- Builds queueObject either from scratch or with data from localStorage -//
 var queueObject = JSON.parse(localStorage.getItem("queueObject"));
 if (queueObject === null) {
-    queueList = [];
-    queueURL = [];
+    var queueList = [];
+    var queueURL = [];
     queueObject = { queueList, queueURL };
 }
 
 //-- EVENT LISTENERS --//
 userInputEl.on('change', getUserInput);
 //- Click listeners placed on the song list -//
-songList.on("click", 'article', () => { fetchLyrics(lyricsArray) });
+songList.on("click", 'article', () => { 
+   if (event.target.className !== 'fa-solid fa-heart-circle-plus') { fetchLyrics(lyricsArray)} });
 songList.on('click', 'i', () => { displayQueue(songData) });
 songList.on('click', '#return', () => { fetchSongs(userSearch) });
 //- Click listeners placed on the recent/queue lists -//
@@ -73,7 +80,7 @@ function displaySongs(data) {
     songList.append(songListHeader);
     lyricsArray = [];
     var songArray = [];
-    var lyricsCount = "";
+    var lyricsCount = 0;
     // goes through the JSON object provided by the fetchSongs function, obtains the pertinent information, determines which songs have lyrics, and when it finds a song it hasn't found before, it creates the HTML elements to display that song's information on the page. //
     for (i = 0; ((i < data.result.length) && (songArray.length < 10)); i++) { // this tells the app to go through (up to) the entire object to find no more than 10 unique songs. //
         var song = data.result[i].track;
@@ -198,6 +205,7 @@ function displayLyrics(data) {
         var newRecent = $('<button class="recent">');
         newRecent.attr("id", recentCount);
         recentCount++;
+        localStorage.setItem("recentCount", recentCount);
         newRecent.text(recentInfo);
         recentListEl.append(newRecent);
         
@@ -223,6 +231,7 @@ function displayQueue(songData) {
             var newQueue = $('<button class="queue">');
             newQueue.attr("id", queueCount);
             queueCount++;
+            localStorage.setItem("queueCount", queueCount);
             newQueue.text(queueInfo);
             queueListEl.append(newQueue);
             
@@ -293,7 +302,8 @@ function clearRecentList() {
     recentListEl.text('Recent Selections');
     var clearBtn = $('<button class="clear">Clear</button>')
     recentListEl.append(clearBtn);
-    localStorage.clear();
+    localStorage.removeItem('recentObject');
+    localStorage.removeItem('recentCount');
 };
 //- The clearQueueList function will empty the contents of the queueListEl, replace the heading and clear button, and clear the localStorage. This allows the user to erase the queue list and erase that data from localStorage so that it is not retained on page refresh. -//
 function clearQueueList() {
@@ -301,49 +311,139 @@ function clearQueueList() {
     queueListEl.text('Up Next');
     var clearBtn = $('<button class="clear">Clear</button>')
     queueListEl.append(clearBtn);
-    localStorage.clear();
+    localStorage.removeItem('queueObject');
+    localStorage.removeItem('queueCount');
 };
-
-
-// var cocktail;
-// api = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=";
-
-
-// function setUp() {
-// var drinkButton = select('#drinkBtn');
-// drinkButton.mousePressed(cocktailType);
-
-// drinkInputEl = $("#drinkInput");
-// }
-
-// function cocktailType() {
-//     var cocktailNameURL = api + drinkInputEl.value();
-//     loadJSON(cocktailNameURL, getCocktail);
-// }
-
-// function getCocktail(data) {
-//     coccktail = data;
-// }
-
-
-var drinkInputEl = $('#drinkInput');
-var ingredientInputEl = $('#ingredientInput');
-
-var cocktailList = $('#cocktailList');
+   
+var drinkInputEl = $('#drinkSearch');
+var drinkList = $('#drinkList')
+var drinkURL = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s="
 var drinkSearch = "";
+var cocktailName = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=" + drinkSearch;
 var randomURL = "https://www.thecocktaildb.com/api/json/v1/1/random.php"
 var randomBtnEl = $('#randomBtn');
-var ingredientURL = "https://www.thecocktaildb.com/api/json/v1/1/search.php?i=" + ingredientSearch;
-var cocktailName = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=" + drinkSearch;
-var ingredientSearch = "";
+var ingredientSearch = "https://www.thecocktaildb.com/api/json/v1/1/search.php?i=" + drinkIngredient;
+var drinkIngredient = "";
 var drinkBtnEl = $("#drinkBtn");
 var mainIngredientBtnEl = $('#mainIngredientBtn');
-var cocktailsArray = [];
-var cocktailData = [];
+
+
+fetch(cocktailName)
+  .then((response) => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw new Error("NETWORK RESPONSE ERROR");
+    }
+  })
+  .then(data => {
+    console.log(data);
+    displaydrinkInput(data)
+  })
+  .catch((error) => console.error("FETCH ERROR:", error));
+
+  drinkBtnEl.on("click", displaydrinkInput);
+
+  function displaydrinkInput(data) {
+    var cocktail = data.drinks[0];
+    var userCocktailDiv = document.getElementById("drinkSearch");
+    
+    var cocktailName = cocktail.strDrink;
+    var heading = document.createElement("h1");
+    heading.innerHTML = cocktailName;
+    userCocktailDiv.appendChild(heading);
+
+    var cocktailImg = document.createElement("img");
+    cocktailImg.src = cocktail.strDrinkThumb;
+    userCocktailDiv.appendChild(cocktailImg);
+
+    var cocktailIngredients = document.createElement("ul");
+    userCocktailDiv.appendChild(cocktailIngredients);  
+  
+    var getIngredients = Object.keys(cocktail)
+    .filter(function (ingredient) {
+      return ingredient.indexOf("strIngredient") == 0;
+    })
+    .reduce(function (ingredients, ingredient) {
+      if (cocktail[ingredient] != null) {
+        ingredients[ingredient] = cocktail[ingredient];
+      }
+      return ingredients;
+    }, {});
+
+    for (let key in getIngredients) {
+        let value = getIngredients[key];
+        listItem = document.createElement("li");
+        listItem.innerHTML = value;
+        cocktailIngredients.appendChild(listItem);
+  }
+
+        var cocktailName = cocktail.strInstructions;
+        var heading = document.createElement("h2");
+        heading.innerHTML = cocktailName;
+        userCocktailDiv.appendChild(heading);
+    };
+
+
+  fetch(ingredientSearch)
+  .then((response) => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw new Error("NETWORK RESPONSE ERROR");
+    }
+  })
+  .then(data => {
+    console.log(data);
+    displayCocktailIngredient(data)
+  })
+  .catch((error) => console.error("FETCH ERROR:", error));
+
+  mainIngredientBtnEl.on("click", displayCocktailIngredient);
+
+  function displayCocktailIngredient(data) {
+    var cocktailByIngredient = data.drinks[0];
+    var ingredientCocktailDiv = document.getElementById("ingredientSearch");
+    
+    var cocktailMainIngredient = cocktailByIngredient.strDrink;
+    var heading = document.createElement("h1");
+    heading.innerHTML = cocktailMainIngredient;
+    ingredientCocktailDiv.appendChild(heading);
+
+    var cocktailByIngredientImg = document.createElement("img");
+    cocktailByIngredientImg.src = cocktailByIngredient.strDrinkThumb;
+    ingredientCocktailDiv.appendChild(cocktailImg);
+
+    var mainCocktailIngredients = document.createElement("ul");
+    ingredientCocktailDiv.appendChild(mainCocktailIngredients);  
+  
+    var getIngredients = Object.keys(cocktailByIngredientl)
+    .filter(function (ingredient) {
+      return ingredient.indexOf("strIngredient") == 0;
+    })
+    .reduce(function (ingredients, ingredient) {
+      if (cocktailMainIngredient[ingredient] != null) {
+        ingredients[ingredient] = ccocktailMainIngredient[ingredient];
+      }
+      return ingredients;
+    }, {});
+
+    for (let key in getIngredients) {
+        let value = getIngredients[key];
+        listItem = document.createElement("li");
+        listItem.innerHTML = value;
+        cocktailIngredientsSearch.appendChild(listItem);
+  }
+    
+        var cocktailMainIngredient = cocktailByIngredient.strInstructions;
+        var heading = document.createElement("h2");
+        heading.innerHTML = cocktailMainIngredient;
+        ingredientCocktailDiv.appendChild(heading);
+  };
 
 
 
-$("#randomBtn").on("click", displayrandomCocktail);
+
 
 fetch(randomURL)
   .then((response) => {
@@ -359,6 +459,7 @@ fetch(randomURL)
   })
   .catch((error) => console.error("FETCH ERROR:", error));
 
+  randomBtnEl.on("click", displayrandomCocktail);
 
   function displayrandomCocktail(data) {
     var randomCocktail = data.drinks[0];
@@ -397,9 +498,5 @@ fetch(randomURL)
         var heading = document.createElement("h2");
         heading.innerHTML = randomCocktailName;
         randomCocktailDiv.appendChild(heading);
-
-        fetch(randomURL);
         };
-
-       
 
