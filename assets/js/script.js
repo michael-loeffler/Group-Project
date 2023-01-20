@@ -305,136 +305,45 @@ function clearQueueList() {
 };
 
 
+// var cocktail;
+// api = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=";
 
-var drinkInputEl = $('#drinkSearch');
-var drinkList = $('#drinkList')
-var drinkURL = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s="
+
+// function setUp() {
+// var drinkButton = select('#drinkBtn');
+// drinkButton.mousePressed(cocktailType);
+
+// drinkInputEl = $("#drinkInput");
+// }
+
+// function cocktailType() {
+//     var cocktailNameURL = api + drinkInputEl.value();
+//     loadJSON(cocktailNameURL, getCocktail);
+// }
+
+// function getCocktail(data) {
+//     coccktail = data;
+// }
+
+
+var drinkInputEl = $('#drinkInput');
+var ingredientInputEl = $('#ingredientInput');
+
+var cocktailList = $('#cocktailList');
 var drinkSearch = "";
-var cocktailName = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=" + drinkSearch;
 var randomURL = "https://www.thecocktaildb.com/api/json/v1/1/random.php"
 var randomBtnEl = $('#randomBtn');
-var ingredientSearch = "https://www.thecocktaildb.com/api/json/v1/1/search.php?i=" + drinkIngredient;
-var drinkIngredient = "";
+var ingredientURL = "https://www.thecocktaildb.com/api/json/v1/1/search.php?i=" + ingredientSearch;
+var cocktailName = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=" + drinkSearch;
+var ingredientSearch = "";
 var drinkBtnEl = $("#drinkBtn");
 var mainIngredientBtnEl = $('#mainIngredientBtn');
-
-
-fetch(cocktailName)
-  .then((response) => {
-    if (response.ok) {
-      return response.json();
-    } else {
-      throw new Error("NETWORK RESPONSE ERROR");
-    }
-  })
-  .then(data => {
-    console.log(data);
-    displaydrinkInput(data)
-  })
-  .catch((error) => console.error("FETCH ERROR:", error));
-
-  drinkBtnEl.on("click", displaydrinkInput);
-
-  function displaydrinkInput(data) {
-    var cocktail = data.drinks[0];
-    var userCocktailDiv = document.getElementById("drinkSearch");
-    
-    var cocktailName = cocktail.strDrink;
-    var heading = document.createElement("h1");
-    heading.innerHTML = cocktailName;
-    userCocktailDiv.appendChild(heading);
-
-    var cocktailImg = document.createElement("img");
-    cocktailImg.src = cocktail.strDrinkThumb;
-    userCocktailDiv.appendChild(cocktailImg);
-
-    var cocktailIngredients = document.createElement("ul");
-    userCocktailDiv.appendChild(cocktailIngredients);  
-  
-    var getIngredients = Object.keys(cocktail)
-    .filter(function (ingredient) {
-      return ingredient.indexOf("strIngredient") == 0;
-    })
-    .reduce(function (ingredients, ingredient) {
-      if (cocktail[ingredient] != null) {
-        ingredients[ingredient] = cocktail[ingredient];
-      }
-      return ingredients;
-    }, {});
-
-    for (let key in getIngredients) {
-        let value = getIngredients[key];
-        listItem = document.createElement("li");
-        listItem.innerHTML = value;
-        cocktailIngredients.appendChild(listItem);
-  }
-
-        var cocktailName = cocktail.strInstructions;
-        var heading = document.createElement("h2");
-        heading.innerHTML = cocktailName;
-        userCocktailDiv.appendChild(heading);
-    };
-
-
-  fetch(ingredientSearch)
-  .then((response) => {
-    if (response.ok) {
-      return response.json();
-    } else {
-      throw new Error("NETWORK RESPONSE ERROR");
-    }
-  })
-  .then(data => {
-    console.log(data);
-    displayCocktailIngredient(data)
-  })
-  .catch((error) => console.error("FETCH ERROR:", error));
-
-  mainIngredientBtnEl.on("click", displayCocktailIngredient);
-
-  function displayCocktailIngredient(data) {
-    var cocktailByIngredient = data.drinks[0];
-    var ingredientCocktailDiv = document.getElementById("ingredientSearch");
-    
-    var cocktailMainIngredient = cocktailByIngredient.strDrink;
-    var heading = document.createElement("h1");
-    heading.innerHTML = cocktailMainIngredient;
-    ingredientCocktailDiv.appendChild(heading);
-
-    var cocktailByIngredientImg = document.createElement("img");
-    cocktailByIngredientImg.src = cocktailByIngredient.strDrinkThumb;
-    ingredientCocktailDiv.appendChild(cocktailImg);
-
-    var mainCocktailIngredients = document.createElement("ul");
-    ingredientCocktailDiv.appendChild(mainCocktailIngredients);  
-  
-    var getIngredients = Object.keys(cocktailByIngredientl)
-    .filter(function (ingredient) {
-      return ingredient.indexOf("strIngredient") == 0;
-    })
-    .reduce(function (ingredients, ingredient) {
-      if (cocktailMainIngredient[ingredient] != null) {
-        ingredients[ingredient] = ccocktailMainIngredient[ingredient];
-      }
-      return ingredients;
-    }, {});
-
-    for (let key in getIngredients) {
-        let value = getIngredients[key];
-        listItem = document.createElement("li");
-        listItem.innerHTML = value;
-        cocktailIngredientsSearch.appendChild(listItem);
-  }
-    
-        var cocktailMainIngredient = cocktailByIngredient.strInstructions;
-        var heading = document.createElement("h2");
-        heading.innerHTML = cocktailMainIngredient;
-        ingredientCocktailDiv.appendChild(heading);
-  };
+var cocktailsArray = [];
+var cocktailData = [];
 
 
 
-
+$("#randomBtn").on("click", displayrandomCocktail);
 
 fetch(randomURL)
   .then((response) => {
@@ -450,7 +359,6 @@ fetch(randomURL)
   })
   .catch((error) => console.error("FETCH ERROR:", error));
 
-  randomBtnEl.on("click", displayrandomCocktail);
 
   function displayrandomCocktail(data) {
     var randomCocktail = data.drinks[0];
@@ -489,5 +397,9 @@ fetch(randomURL)
         var heading = document.createElement("h2");
         heading.innerHTML = randomCocktailName;
         randomCocktailDiv.appendChild(heading);
+
+        fetch(randomURL);
         };
+
+       
 
