@@ -8,97 +8,93 @@
   <script src="https://kit.fontawesome.com/f32375b844.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="./assets/css/style.css" />
   <title>Karaoke Knights</title>
-
 </head>
 
 <body>
   <header>
     <div class="box">
-      <h1 class="is-size-1 has-text-centered">Karaoke Knights</h1>
-      <h2 class="is-size-5 has-text-centered">The ultimate tool to create the best Karaoke Night to date</h2>
+      <h1 class=" header is-uppercase is-size-1 has-text-centered">Karaoke Knights</h1>
+      <h2 class="is-size-5 has-text-centered">The ultimate tool to create the best Karaoke Night to date!</h2>
     </div>
   </header>
   <main>
     <div class="columns">
-      <div class="column is-two-fifths">
+      <div class="column is-one-third">
         <div class="tile is-ancestor pl-3">
           <div id="left" class="tile is-vertical is-3 is-parent">
             <h2 class="is-size-5 ">Search:</h2>
-
-            <h2>Artist or Song Name</h2>
+            <h2 class="Artist"> Artist or Song Name</h2>
             <section class="field has-addons">
               <div class="control">
                 <input id="musicInput" class="input" type="text" placeholder="">
-                <button type="submit"><i class="fa fa-search"></i></button>
               </div>
-            </section> <!--field had addon-->
+            </section>
 
-            <!-- <div class="field has-addons">
+            <div class="box2">
+              <div id="recent" class=" B2 is-size-5 tile is-child is-pulled-left">Recent Selections
+                <button class="clear">Clear</button>
+                
+              </div>
 
-              <div class="control">
-                <div class="column">
-                  <label class="label">Artist</label>
-                </div>
-                <input class="input" type="text" placeholder="Artist name">
+              <div id="queue" class="B2 is-size-5 tile is-child is-pulled-left">Up Next
+                <button class="clear">Clear</button>
               </div>
-              <div class="control">
-                <a class="button">
-                  Submit
-                </a>
-              </div>
-            </div>
-            <div class="field is-child">
-              <div class="field has-addons">
-                <div class="control">
-                  <div class="columns">
-                    <div class="column">
-                      <label class="label">Song Title</label>
-                    </div>
-                    <div class="column">
-                      <input class="is-size-6 input" type="text" placeholder="Song title">
-                    </div>
-                    <div class="control">
-                      <a class="button">
-                        Submit
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="field is-child">
-                <div class="field has-addons">
-                  <div class="control">
-                    <div class="columns">
-                      <div class="column">
-                        <label class="label">Genre</label>
-                      </div>
-                      <div class="column">
-                        <input class="is-size-6 input" type="text" placeholder="Genre Search">
-                      </div>
-                      <div class="control">
-                        <a class="button">
-                          Submit
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>-->
-            <div class="box">
-              <div id="recent" class="tile is-child is-pulled-left ">Recent Selections</div>
-              <div id="queue" class="tile is-child is-pulled-left">Up Next</div>
+
             </div>
           </div>
         </div>
       </div>
-      <div class="column 2 auto">
+      <div class="C2 column 2 is-one-third">
         <div id="songList" class="is-9 is-parent">
         </div>
       </div>
-      <div class="column 3 auto">
-        <div id="cocktails" class="is-9 is-parent">
+      <div>
+        <h1 class="Drinks is-size-4">Drinks</h1>
+
+        <div class="field is-child">
+          <label class="label">Look up by Drink Name</label>
+          <div class="control">
+            <input id="drinkSearch" class="input" type="text" placeholder="Tequila Sunrise">
+          </div>
+          <div class="control">
+            <button class="button is-primary is-light id=drinkBtn">
+              Search
+            </button>
+          </div>
+        </div>
+
+        <div class="field is-child">
+          <label class="label">Look up by Main Ingredient</label>
+          <div class="control">
+            <input id="ingredientSearch" class="input" type="text" placeholder="Vodka">
+          </div>
+          <div class="control">
+            <button class="button drinkk is-primary is-light id=mainIngredientBtn">
+              Search
+            </button>
+          </div>
+        </div>
+
+        <div class="field is-child is-horizontal">
+          <div class="field-label">
+            <!-- Left empty for spacing -->
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control" id="randomDrink">
+                <button class="RD is-light button is-primary id=randomBtn">
+                  Random Drink!
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column 3 auto">
+          <div id="cocktails" class="is-9 is-parent">
+            </label>
+          </div>
         </div>
       </div>
-    </div>
     </div>
     </div>
   </main>
