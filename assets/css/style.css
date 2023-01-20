@@ -2,7 +2,6 @@ body {
     background: linear-gradient(rgb(16, 96, 128),rgb(218, 206, 37));
     font-weight: bolder;
 }
-
 .box {
     color: black;
     background: linear-gradient(to right,
@@ -10,11 +9,9 @@ body {
     rgb(37, 129, 186),
     rgb(158, 157, 150));
 }
-
 .box2 {
     color: black;
 }
-
 .recent {
     font-weight: bold;
     color: black;
@@ -25,9 +22,6 @@ body {
     margin-bottom: 5%;
     border: 0.2px;
 }
-
-
-
 .queue {
     font-weight: bold;
     color: black;
@@ -37,43 +31,32 @@ body {
     text-align: justify;
     border: 0.2px;
 }
-
 .clear {
     background: black;
     color: whitesmoke;
 }
-
 .label {
     font-weight: bold;
     text-align: left;
-
 }
-
 .w-110 {
     width: 110px;
 }
-
 .Artist {
     width: 300px;
     margin-top: .5rem;
     margin-bottom: .5rem;
 }
-
 .input {
     width: 250px;
-
 }
-
 .C2 {
     text-align: justify;
     margin-top: 0%;
 }
-
-
 #songList {
     padding-top: 10%;
 }
-
 .Drinks {
     font-size: larger;
     font-weight: bolder;
@@ -83,7 +66,6 @@ body {
     padding-top: 5%;
     letter-spacing: .2rem;
 }
-
 h2 {
     color: rgb(24, 35, 67);
     font-weight: bolder;
@@ -92,37 +74,30 @@ h2 {
     padding: 1px;
     min-height: auto;
 }
-
 .button{
     width: 60px;
     height: 20px;
-
 }
 #drinkBtn{
     height: 40px;
     width: 70px;
     color: black;
-    
 }
-
 #randomDrink {
     max-width: 350px;
     text-align: center;
     padding: 30px 30px 12px 30px;
     border-radius: 5px;
 }
-
 #randomDrink h1 {
     margin: 0 0 15px 0;
     text-transform: uppercase;
 }
-
 #randomDrink img {
     max-width: 300px;
     border: 6px solid #fff;
     border-radius: 150px;
 }
-
 .B2 {
     width: 300%;
 }
@@ -141,11 +116,17 @@ h2 {
 .RD{
     width: auto;
     margin-bottom: 3%;
-    font-weight: bold;  
+    font-weight: bold;
     font-family: 'Calligraffitti', cursive;
     font-size:1.5rem;
     letter-spacing: .4rem;
     border-radius: 10%;
-    
 }
+
+
+
+
+
+
+
 
