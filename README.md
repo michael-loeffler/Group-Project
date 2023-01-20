@@ -70,7 +70,7 @@ A user can choose to click a button to view a random cocktail. Any time a cockta
 
 ## Preview of application and demonstration of features
 
-![Preview of application and demonstration of features](./assets/images/KaraokeKnightsDemo.jpeg)
+![Preview of application and demonstration of features](./assets/images/KaraokeKnightsDemo.png)
 
 ## Credits
 
