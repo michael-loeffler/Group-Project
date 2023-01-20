@@ -36,7 +36,7 @@ if (queueObject === null) {
 //-- EVENT LISTENERS --//
 userInputEl.on('change', getUserInput);
 //- Click listeners placed on the song list -//
-songList.on("click", 'article', () => { 
+songList.on("click", () => { 
    if (event.target.className !== 'fa-solid fa-heart-circle-plus') { fetchLyrics(lyricsArray)} });
 songList.on('click', 'i', () => { displayQueue(songData) });
 songList.on('click', '#return', () => { fetchSongs(userSearch) });
@@ -94,23 +94,33 @@ function displaySongs(data) {
             songArray.push(song);
             var songDivEl = $('<article>');
             songDivEl.attr("class", "media level-left");
+            songDivEl.css("cursor", "pointer");
             songDivEl.attr("id", lyricsCount); // creates an "index" for this song that can be used to pull data from a stored array later when this element is clicked //
             var figureEl = $('<figure>');
             figureEl.attr("class", "media-left");
+            figureEl.attr("id", lyricsCount);
             var pEl = $('<p>');
             pEl.attr("class", "image is-64x64");
+            pEl.attr("id", lyricsCount);
             var albumIcon = $('<img>');
+            albumIcon.attr("id", lyricsCount);
             pEl.append(albumIcon);
             figureEl.append(pEl);
 
             var mediaContainerEl = $('<div>');
             mediaContainerEl.attr("class", "media-content");
+            mediaContainerEl.attr("id", lyricsCount);
             var mediaContentEl = $('<div>');
             mediaContentEl.attr("class", "content");
+            mediaContentEl.attr("id", lyricsCount);
             var songP = $('<p>');
+            songP.attr("id", lyricsCount);
             var songHeaderEl = $('<strong>');
+            songHeaderEl.attr("id", lyricsCount);
             var br = $('<br>');
+            br.attr("id", lyricsCount);
             var songInfoEl = $('<small>')
+            songInfoEl.attr("id", lyricsCount);
             songP.append(songHeaderEl);
             songP.append(br);
             songP.append(songInfoEl);
